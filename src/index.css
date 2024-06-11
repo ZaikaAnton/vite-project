@@ -6,3 +6,7 @@
   --white-color: #ffffff;
   --separator-color: #d4d6e0;
 }
+
+body {
+  margin: 0;
+}
