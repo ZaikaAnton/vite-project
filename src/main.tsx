@@ -5,15 +5,22 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Menu } from "./Pages/Menu/Menu";
 import { Cart } from "./Pages/Cart/Cart";
 import { Error } from "./Pages/Error/Error";
+import { Layout } from "./layout/Menu/Menu";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Menu />,
-  },
-  {
-    path: "/cart",
-    element: <Cart />,
+    element: <Layout />,
+    children: [
+      {
+        path: "/",
+        element: <Menu />,
+      },
+      {
+        path: "/cart",
+        element: <Cart />,
+      },
+    ],
   },
   {
     path: "*",
