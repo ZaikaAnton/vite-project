@@ -4,4 +4,5 @@ import { ButtonHTMLAttributes, ReactNode } from "react";
 // extends ButtonHTMLAttributes<HTMLButtonElement> - вот это нужно чтоб мы в компоненте App.tsx смогли навесить обработчик на Button
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
+  appearance?: "big" | "small";
 }
