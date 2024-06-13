@@ -1,6 +1,6 @@
 import styles from "./Layout.module.css";
 import cn from "classnames";
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import Button from "../../components/Button/Button";
 
 export function Layout() {
@@ -47,7 +47,7 @@ export function Layout() {
           </Button>
         </div>
 
-        <div>
+        <div className={styles.content}>
           <Outlet />
         </div>
       </div>
