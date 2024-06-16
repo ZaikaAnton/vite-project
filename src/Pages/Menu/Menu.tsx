@@ -1,26 +1,47 @@
 import styles from "./Menu.module.css";
 import Headling from "../../components/Headling/Headling";
 import Search from "../../components/Search/Search";
-import ProductCard from "../../components/ProductCard/ProductCard";
 import { PREFIX } from "../../helpers/API";
 import { Product } from "../../interfaces/product.interface";
 import { useEffect, useState } from "react";
+import axios, { AxiosError } from "axios";
+import { MenuList } from "./MenuList/MenuList";
 
 export function Menu() {
   // Стейт, который хранит данные, полученные с бека
   const [products, setProducts] = useState<Product[]>([]);
 
+  // Стейт, который хранит булево состояние о прелоадере, к запросу на бек
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  // Состояние для обработки ошибки, к запросу на бек
+  const [error, setError] = useState<string | undefined>();
+
   // Запрос на бек, для получения всех карточек с блюдами
   const getMenu = async () => {
     try {
-      const res = await fetch(`${PREFIX}/products`);
-      if (!res.ok) {
-        return;
-      }
-      const data = (await res.json()) as Product[];
+      // Запуска прелоадера
+      setIsLoading(true);
+      // Промис, который отрабатывает 2 секунды, имитирует длительность работы прелоадера
+      await new Promise<void>((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, 2000);
+      });
+
+      const { data } = await axios.get<Product[]>(`${PREFIX}/products`);
       setProducts(data);
+      // Возвращаем isLoading в false, чтоб прекратить отображение прелоадера
+      setIsLoading(false);
     } catch (e) {
       console.error(e);
+      // Проверка принадлежности ошибки (объект e) к классу AxiosError
+      if (e instanceof AxiosError) {
+        // e.massage - это текс ошибки. Тут мы этот тек устанавливаем в наш стейт и теперь он должен хранить этот текст
+        setError(e.message);
+      }
+      // Возвращаем isLoading в false, чтоб прекратить отображение прелоадера
+      setIsLoading(false);
       return;
     }
   };
@@ -37,17 +58,9 @@ export function Menu() {
         <Search placeholder="Введите блюдо или состав" />
       </div>
       <div>
-        {products.map((p) => (
-          <ProductCard
-            key={p.id}
-            id={p.id}
-            name={p.name}
-            description={p.ingredients.join(", ")}
-            rating={p.rating}
-            price={p.price}
-            image={p.image}
-          />
-        ))}
+        {error && <>{error}</>}
+        {!isLoading && <MenuList products={products} />}
+        {isLoading && <>Происходит запрос на бекенд</>}
       </div>
     </>
   );
