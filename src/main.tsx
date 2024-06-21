@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter, defer } from "react-router-dom";
 import { Cart } from "./Pages/Cart/Cart";
 import { Error as ErrorPage } from "./Pages/Error/Error";
 import { Layout } from "./layout/Menu/Layout";
@@ -33,14 +33,16 @@ const router = createBrowserRouter([
         element: <ProductOne />,
         errorElement: <>Ошибка</>,
         loader: async ({ params }) => {
-          // Промис, который отрабатывает 2 секунды, имитирует длительность работы прелоадера
-          await new Promise<void>((resolve) => {
-            setTimeout(() => {
-              resolve();
-            }, 2000);
+          return defer({
+            data: new Promise((resolve, reject) => {
+              setTimeout(() => {
+                axios
+                  .get(`${PREFIX}/products/${params.id}`)
+                  .then((data) => resolve(data))
+                  .catch((e) => reject(e));
+              }, 2000);
+            }),
           });
-          const { data } = await axios.get(`${PREFIX}/products/${params.id}`);
-          return data;
         },
       },
     ],
