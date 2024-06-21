@@ -59,3 +59,5 @@ export function Menu() {
     </>
   );
 }
+
+export default Menu;

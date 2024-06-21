@@ -1,14 +1,15 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { Menu } from "./Pages/Menu/Menu";
 import { Cart } from "./Pages/Cart/Cart";
 import { Error as ErrorPage } from "./Pages/Error/Error";
 import { Layout } from "./layout/Menu/Layout";
 import { ProductOne } from "./Pages/Product/ProductOne";
 import axios from "axios";
 import { PREFIX } from "./helpers/API";
+import { Suspense, lazy } from "react";
+
+const Menu = lazy(() => import("./Pages/Menu/Menu"));
 
 const router = createBrowserRouter([
   {
@@ -17,7 +18,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Menu />,
+        element: (
+          <Suspense fallback={<>Загрузка...</>}>
+            <Menu />
+          </Suspense>
+        ),
       },
       {
         path: "/cart",
@@ -34,7 +39,7 @@ const router = createBrowserRouter([
               resolve();
             }, 2000);
           });
-          const { data } = await axios.get(`${PREFIX}/produts/${params.id}`);
+          const { data } = await axios.get(`${PREFIX}/products/${params.id}`);
           return data;
         },
       },
