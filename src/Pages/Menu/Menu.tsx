@@ -22,12 +22,6 @@ export function Menu() {
     try {
       // Запуска прелоадера
       setIsLoading(true);
-      // Промис, который отрабатывает 2 секунды, имитирует длительность работы прелоадера
-      await new Promise<void>((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 2000);
-      });
 
       const { data } = await axios.get<Product[]>(`${PREFIX}/products`);
       setProducts(data);

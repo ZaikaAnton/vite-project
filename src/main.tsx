@@ -4,9 +4,11 @@ import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Menu } from "./Pages/Menu/Menu";
 import { Cart } from "./Pages/Cart/Cart";
-import { Error } from "./Pages/Error/Error";
+import { Error as ErrorPage } from "./Pages/Error/Error";
 import { Layout } from "./layout/Menu/Layout";
-import { Product } from "./Pages/Product/Product";
+import { ProductOne } from "./Pages/Product/ProductOne";
+import axios from "axios";
+import { PREFIX } from "./helpers/API";
 
 const router = createBrowserRouter([
   {
@@ -23,13 +25,24 @@ const router = createBrowserRouter([
       },
       {
         path: "/product/:id",
-        element: <Product />,
+        element: <ProductOne />,
+        errorElement: <>Ошибка</>,
+        loader: async ({ params }) => {
+          // Промис, который отрабатывает 2 секунды, имитирует длительность работы прелоадера
+          await new Promise<void>((resolve) => {
+            setTimeout(() => {
+              resolve();
+            }, 2000);
+          });
+          const { data } = await axios.get(`${PREFIX}/produts/${params.id}`);
+          return data;
+        },
       },
     ],
   },
   {
     path: "*",
-    element: <Error />,
+    element: <ErrorPage />,
   },
 ]);
 
