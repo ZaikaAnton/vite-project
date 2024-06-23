@@ -8,6 +8,9 @@ import { ProductOne } from "./Pages/Product/ProductOne";
 import axios from "axios";
 import { PREFIX } from "./helpers/API";
 import { Suspense, lazy } from "react";
+import { AuthLayout } from "./layout/Auth/AuthLayout";
+import { Login } from "./Pages/Login/Login";
+import { Registr } from "./Pages/Registr/Regist";
 
 const Menu = lazy(() => import("./Pages/Menu/Menu"));
 
@@ -44,6 +47,20 @@ const router = createBrowserRouter([
             }),
           });
         },
+      },
+    ],
+  },
+  {
+    path: "/auth",
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "register",
+        element: <Registr />,
       },
     ],
   },
