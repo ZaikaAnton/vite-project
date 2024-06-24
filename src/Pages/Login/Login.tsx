@@ -7,6 +7,8 @@ import { FormEvent } from "react";
 import axios, { AxiosError } from "axios";
 import { PREFIX } from "../../helpers/API";
 import { useState } from "react";
+import { LoginResponse } from "../../interfaces/auth.interface";
+import { useNavigate } from "react-router-dom";
 
 export type LoginForm = {
   email: {
@@ -21,6 +23,9 @@ export function Login() {
   // Стейт для ошибки
   const [error, setError] = useState<string | null>();
 
+  // Функция(хук), которая будет перенаправлять нас на страницу после успешного логина
+  const navigate = useNavigate();
+
   // Функция, которая будет сабмитет нашу форму после ее заполнения
   const submit = async (event: FormEvent) => {
     event.preventDefault();
@@ -34,11 +39,12 @@ export function Login() {
   const sendLogin = async (email: string, password: string) => {
     // Делаем постящий запрос
     try {
-      const { data } = await axios.post(`${PREFIX}/auth/login`, {
+      const { data } = await axios.post<LoginResponse>(`${PREFIX}/auth/login`, {
         email,
         password,
       });
-      console.log(data);
+      localStorage.setItem("jwt", data.access_token);
+      navigate("/");
     } catch (e) {
       if (e instanceof AxiosError) {
         setError(e.response?.data.message);

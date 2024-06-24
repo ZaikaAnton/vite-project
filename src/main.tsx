@@ -11,13 +11,18 @@ import { Suspense, lazy } from "react";
 import { AuthLayout } from "./layout/Auth/AuthLayout";
 import { Login } from "./Pages/Login/Login";
 import { Registr } from "./Pages/Registr/Regist";
+import { RequiedAuth } from "./helpers/RequireAuth";
 
 const Menu = lazy(() => import("./Pages/Menu/Menu"));
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: (
+      <RequiedAuth>
+        <Layout />
+      </RequiedAuth>
+    ),
     children: [
       {
         path: "/",

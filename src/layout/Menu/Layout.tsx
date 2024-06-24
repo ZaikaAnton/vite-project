@@ -2,8 +2,18 @@ import styles from "./Layout.module.css";
 import cn from "classnames";
 import { NavLink, Outlet } from "react-router-dom";
 import Button from "../../components/Button/Button";
+import { useNavigate } from "react-router-dom";
 
 export function Layout() {
+  // Функция(хук), которая навигирует нас
+  const navigate = useNavigate();
+
+  // Функция, которая навешена на кнопку. Которая отвечает за выход из приложения
+  const logout = () => {
+    localStorage.removeItem("jwt");
+    navigate("/auth/login");
+  };
+
   return (
     <>
       <div className={styles.layout}>
@@ -42,7 +52,7 @@ export function Layout() {
               Корзина
             </NavLink>
           </div>
-          <Button className={styles.exit}>
+          <Button className={styles.exit} onClick={logout}>
             <img src="/exit-icon.svg" alt="Exit icon" /> Выход
           </Button>
         </div>
