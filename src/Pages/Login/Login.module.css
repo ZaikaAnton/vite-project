@@ -38,3 +38,9 @@
   text-decoration: none;
   color: var(--primary-color);
 }
+
+.error {
+  background: rgb(241, 95, 95);
+  color: white;
+  padding: 20px;
+}
