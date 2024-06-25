@@ -9,6 +9,9 @@ import { PREFIX } from "../../helpers/API";
 import { useState } from "react";
 import { LoginResponse } from "../../interfaces/auth.interface";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store/store";
+import { userActions } from "../../store/user.slice";
 
 export type LoginForm = {
   email: {
@@ -25,6 +28,9 @@ export function Login() {
 
   // Функция(хук), которая будет перенаправлять нас на страницу после успешного логина
   const navigate = useNavigate();
+
+  // Хук useDispatch
+  const dispatch = useDispatch<AppDispatch>();
 
   // Функция, которая будет сабмитет нашу форму после ее заполнения
   const submit = async (event: FormEvent) => {
@@ -43,7 +49,10 @@ export function Login() {
         email,
         password,
       });
-      localStorage.setItem("jwt", data.access_token);
+      // localStorage.setItem("jwt", data.access_token);
+
+      dispatch(userActions.addJwt(data.access_token));
+
       navigate("/");
     } catch (e) {
       if (e instanceof AxiosError) {
